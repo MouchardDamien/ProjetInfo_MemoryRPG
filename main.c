@@ -26,22 +26,8 @@ int main() {
   T_Role unavailable_roles[NB_ROLE];
   int num_ppl;
   char roles[NB_ROLE][10] = {"WARRIOR", "RANGER", "MAGE", "THIEF"};
-	
-  printf("\tHELLO GAMERS !!! WELCOME IN THE BEST GAME OF THE WORLD : \n\n\n\n  \n");
-  
-  sleep(3);
-  ClearScreen();
-  
-  printf("How many people are going to play (2,3 or 4) ? \n\n");
-  scanf("%d", &num_ppl);
 
-	while(num_ppl != 2 && num_ppl != 3 && num_ppl != 4){
-		ClearScreen();
-		printf("Error ! Choose a correct answer ! \nHow many people are going to play (2,3 or 4) ? \n");
-		scanf("%d", &num_ppl);
-	}
-
-  ClearScreen();
+  num_ppl = welcome();
 
   for (int i = 0; i < NB_ROLE; i++) {
     unavailable_roles[i] = NOROLE;
@@ -100,4 +86,3 @@ int main() {
  
 	return 0;
 }
-
