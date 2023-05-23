@@ -1,73 +1,103 @@
 #include "header.h"
 
+
 int main() {
+  
+  ClearScreen();
+  
   srand(time(NULL));
   // Creer un menu de lancement (avec option: Voir les stats + Lancer une
   // partie)
-
   // Creer les personnages (nombre, nom, role, ?couleur?)
+  T_Element tab_Elements[] = {
+    WARRIOR_WEAPON, RANGER_WEAPON, MAGE_WEAPON, THIEF_WEAPON, CHEST,
+    CHEST,          ZOMBIE,        ZOMBIE,      ZOMBIE,       ZOMBIE,
+    TROLL,          TROLL,         TROLL,       TROLL,        BASILISK,
+    BASILISK,       BASILISK,      BASILISK,    HARPY,        HARPY,
+    HARPY,          HARPY,         PORTAL,      TOTEM,        TOTEM,
+    EMPTY,          HIDEN};
+
+  char name_Elements[14][11] = {
+    "  ", " \U00002694", "\U0001F9F9", "\U0001F4D3", "\U0001F52A",
+    "\U0001F381", "\U0001F9DF",  "\U0001F437", "\U0001F40D", "\U0001F985",
+    "\U0001F300", "\U0001F5FF",  "USED", "\U0001F533"};
+  
   Player player1, player2, player3, player4;
   T_Role unavailable_roles[NB_ROLE];
   int num_ppl;
   char roles[NB_ROLE][10] = {"WARRIOR", "RANGER", "MAGE", "THIEF"};
-
-  printf("How many people are going to play (2,3 or 4) ? \n");
+	
+  printf("\tHELLO GAMERS !!! WELCOME IN THE BEST GAME OF THE WORLD : \n\n\n\n  \n");
+  
+  sleep(3);
+  ClearScreen();
+  
+  printf("How many people are going to play (2,3 or 4) ? \n\n");
   scanf("%d", &num_ppl);
 
-  for(int i=0;i<NB_ROLE;i++){
+	while(num_ppl != 2 && num_ppl != 3 && num_ppl != 4){
+		ClearScreen();
+		printf("Error ! Choose a correct answer ! \nHow many people are going to play (2,3 or 4) ? \n");
+		scanf("%d", &num_ppl);
+	}
+
+  ClearScreen();
+
+  for (int i = 0; i < NB_ROLE; i++) {
     unavailable_roles[i] = NOROLE;
   }
 
-  player1 = init_player(1,unavailable_roles, 0, 1,roles);
+  init_player(&player1, 1, unavailable_roles, -1, 1, roles);
   unavailable_roles[0] = player1.role;
-
-  player2 = init_player(2,unavailable_roles,3,0,roles);
+  
+  init_player(&player2, 2, unavailable_roles, 3, -1, roles);
   unavailable_roles[1] = player2.role;
-  
+
   switch (num_ppl) {
-    default :
-      break;
+  default:
+    break;
 
-    case 3 :
-      player3 = init_player(3,unavailable_roles,4,3,roles);
-      unavailable_roles[2] = player3.role;
+  case 3:
+    init_player(&player3, 3, unavailable_roles, 5, 3, roles);
+    unavailable_roles[2] = player3.role;
 
-      break;
+    break;
 
-    case 4 :
-      player3 = init_player(3,unavailable_roles,4,3,roles);
-      unavailable_roles[2] = player3.role;
+  case 4:
+    init_player(&player3, 3, unavailable_roles, 5, 3, roles);
+    unavailable_roles[2] = player3.role;
 
-      player4 = init_player(4,unavailable_roles,1,4,roles);
-      unavailable_roles[3] = player4.role;
+    init_player(&player4, 4, unavailable_roles, 1, 5, roles);
+    unavailable_roles[3] = player4.role;
 
-      break;
+    break;
   }
-  
+
   // Creer le plateau
   T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU];
   T_Element display_plateau[SIZE_PLATEAU][SIZE_PLATEAU];
   T_Element hide_plateau[SIZE_PLATEAU][SIZE_PLATEAU];
-  create_plateau(plateau);
-  //create_plateau(display_plateau);
-  print_Plateau(plateau);
-  create_hiden_plateau(hide_plateau);
-  print_Plateau(hide_plateau);
-
-
-  // 1) Boucler tous les tours de jeux de la partie
   
-  // 2) Boucler sur les tours de jeux
-   
-  // 3) Boucler sur chaque joueur
-  // Choisir une arme
-  // Parcours le labyrinthe
-  // Les conditions de victoires (si le joueur a gagne ou nn)
-
- //while(personne a gagné){
-   
- //}
+  create_plateau(plateau, tab_Elements);
+  print_Plateau(num_ppl, plateau, name_Elements);
+  create_hiden_plateau(hide_plateau, tab_Elements);
   
-  return 0;
+  switch(num_ppl){
+  	case 2:
+  		game2(&player1,&player2,plateau,num_ppl,tab_Elements,name_Elements,roles);
+  		break;
+  	case 3:
+  		game3(&player1,&player2,&player3,plateau,num_ppl,tab_Elements,name_Elements,roles);
+  		break;
+  	case 4:
+  		game4(&player1,&player2,&player3,&player4,plateau,num_ppl,tab_Elements,name_Elements,roles);
+  		break;
+  	default:
+  		break;
+  	}
+  
+
+ 
+	return 0;
 }
 
