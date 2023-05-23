@@ -30,7 +30,7 @@ typedef enum {
   HIDEN
 } T_Element;
 
-typedef enum{TORCH, SHIELD, AXE, BOW} T_Weapon;
+typedef enum{TORCH, MIRROR, AXE, BOW} T_Weapon;
 
 
 
@@ -48,6 +48,8 @@ typedef struct {
 } Player;
 
 
+int welcome();
+
 T_Role init_role(T_Role used_roles[NB_ROLE]);
 
 void init_player(Player * create, int num_player, T_Role used_roles[NB_ROLE], int coord_x, int coord_y, char yes_roles[NB_ROLE][10]);
@@ -60,7 +62,7 @@ void print_Plateau(int nb_p, T_Element tab_plateau[SIZE_PLATEAU][SIZE_PLATEAU], 
 
 void game(Player player, int nb_p);
 
-void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_elements[], char name_elements[14][11], char name_roles[NB_ROLE][10]);
+int player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_elements[], char name_elements[14][11], char name_roles[NB_ROLE][10]);
 
 void ClearScreen();
 
