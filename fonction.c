@@ -26,6 +26,30 @@ T_Role init_role(T_Role used_roles[NB_ROLE]) {
   return role;
 }
 
+
+int welcome(){
+  int num_players;
+  
+  printf("\tHELLO GAMERS !!! WELCOME IN THE BEST GAME OF THE WORLD : THE MEMORY RPG !!! \n\n\n\n  \n");
+  
+  sleep(3);
+  ClearScreen();
+  
+  printf("How many people are going to play (2,3 or 4) ? \n\n");
+  scanf("%d", &num_players);
+
+	while(num_players != 2 && num_players != 3 && num_players != 4){
+		ClearScreen();
+		printf("Error ! Choose a correct answer ! \nHow many people are going to play (2,3 or 4) ? \n");
+		scanf("%d", &num_players);
+	}
+
+  ClearScreen();
+  
+  return num_players;
+}
+
+
 void init_player(Player * create, int num_player, T_Role used_roles[NB_ROLE], int coord_x,
                    int coord_y, char yes_roles[NB_ROLE][10]) {
   printf("What is the name of the player n°%d ? \n\n", num_player);
@@ -73,6 +97,7 @@ void init_player(Player * create, int num_player, T_Role used_roles[NB_ROLE], in
   }
 }
 
+
 void create_plateau(T_Element tab_plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_Elements1[]) {
   int index;
   for (int i = 0; i < SIZE_PLATEAU; i++) {
@@ -90,6 +115,7 @@ void create_plateau(T_Element tab_plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element
   }
 }
 
+
 void create_hiden_plateau(T_Element tab[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_Elements2[]) {
   for (int i = 0; i < SIZE_PLATEAU; i++) {
     for (int j = 0; j < SIZE_PLATEAU; j++) {
@@ -97,7 +123,6 @@ void create_hiden_plateau(T_Element tab[SIZE_PLATEAU][SIZE_PLATEAU], T_Element t
     }
   }
 }
-
 
 
 void print_Plateau(int nb_p, T_Element tab_plateau[SIZE_PLATEAU][SIZE_PLATEAU], char name_elements[14][11]) {
@@ -132,7 +157,7 @@ void print_Plateau(int nb_p, T_Element tab_plateau[SIZE_PLATEAU][SIZE_PLATEAU], 
 
 
 // Tour de joueur
-void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_elements[], char name_elements[14][11], char name_roles[NB_ROLE][10]){
+int player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_elements[], char name_elements[14][11], char name_roles[NB_ROLE][10]){
 
   T_Weapon weapon;
   char direction;
@@ -148,7 +173,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
   
   create_hiden_plateau(one_turn_plateau, tab_elements);
   // Boucle gagnant ou mort
-  printf("/////////////////////////\n %s, the %s, it's your turn ! \n/////////////////////////\n\n", player->name,name_roles[player->role]);
+  printf("////////////////////////////////////\n %s, the %s, it's your turn ! \n////////////////////////////////////\n\n", player->name,name_roles[player->role]);
   while ((player_win == 0) && (player->dead == 0)) {
 
     //Saut de ligne pour y voir un peu plus clair
@@ -158,7 +183,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
     
     // Afficher le plateau
     print_Plateau(nb_ppl, one_turn_plateau,name_elements);
-    printf("Choose a weapon :\n 0) Torch\n 1) Shield\n 2) Axe\n 3) Bow\n");
+    printf("Choose a weapon :\n 0) Torch\n 1) Mirror\n 2) Axe\n 3) Bow\n");
     scanf("%d", &weapon);
     // On verfie ce que nous retourne le scanf avec une boucle
     while ((weapon < 0) || (weapon > 3)) {
@@ -245,6 +270,8 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
         printf("Please, choose an element between: z, q, s and d\n\n");
       }
     } while (wrong_answer == 1);
+
+    player->nb_cases++;
     
     one_turn_plateau[player->y][player->x] = plateau[player->y][player->x]; //On relie les 2 tableaux
 
@@ -259,6 +286,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       case ZOMBIE:
         if(weapon == TORCH){
           printf("Good job !\nYou kill a Zombie !\n");
+          player->kill++;
           one_turn_plateau[player->y][player->x] = EMPTY;
         }
         else{
@@ -270,6 +298,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       case TROLL:
         if(weapon == AXE){
           printf("Good job !\nYou kill a Troll !\n");
+          player->kill++;
           one_turn_plateau[player->y][player->x] = EMPTY;
         }
         else{
@@ -279,8 +308,9 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       break;
 
       case BASILISK:
-        if(weapon == SHIELD){
+        if(weapon == MIRROR){
           printf("Good job !\nYou kill a Basilisk !\n");
+          player->kill++;
           one_turn_plateau[player->y][player->x] = EMPTY;
         }
         else{
@@ -292,6 +322,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       case HARPY:
         if(weapon == BOW){
           printf("Good job !\nYou kill a Harpy !\n");
+          player->kill++;
           one_turn_plateau[player->y][player->x] = EMPTY;
         }
         else{
@@ -342,37 +373,17 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
         printf("Your y coordinate: \n");
         scanf("%d", &player->y);
         
-        switch(nb_ppl){
-  	case 2:
-  		while((player->x == 3 && player->y == 0) || (player->x == 0 && player->y == 1)){
-  			printf("You aren't allowed to teleport here ! \n");
-  			printf("Your new x coordinate: \n");
-        		scanf("%d", &player->x);
-        		printf("Your new y coordinate: \n");
-        		scanf("%d", &player->y);
-        	}
-  		break;
-  	case 3:
-  		while((player->x == 3 && player->y == 0) || (player->x == 0 && player->y == 1) || (player->x == 4 && player->y == 3)){
-  			printf("You aren't allowed to teleport here ! \n");
-  			printf("Your new x coordinate: \n");
-        		scanf("%d", &player->x);
-        		printf("Your new y coordinate: \n");
-        		scanf("%d", &player->y);
-        	}
-  		break;
-  	case 4:
-  		while((player->x == 3 && player->y == 0) || (player->x == 0 && player->y == 1) || (player->x == 4 && player->y == 3) || (player->x == 1 && player->y == 4)){
-  			printf("You aren't allowed to teleport here ! \n");
-  			printf("Your new x coordinate: \n");
-        		scanf("%d", &player->x);
-        		printf("Your new y coordinate: \n");
-        		scanf("%d", &player->y);
-        	}
-  		break;
-  	default:
-  		break;
-  	}
+        while(player->x<1 || player->x>5){
+          printf("Error for the x ! Choose a number beetween 1 and 5 :");
+          scanf("%d",&player->x);
+          player->x --;
+        }
+
+        while(player->y<1 || player->y>5){
+          printf("Error for the y ! Choose a number beetween 1 and 5 :");
+          scanf("%d",&player->y);
+          player->y --;
+        }
         
         one_turn_plateau[player->y][player->x] = plateau[player->y][player->x];
         //Attention, il reste a verifier si la case de teleportation est bien face cache, 
@@ -384,6 +395,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       		case ZOMBIE:
         		if(weapon == TORCH){
           		printf("Good job !\nYou kill a Zombie !\n");
+              player->kill++;
           		one_turn_plateau[player->y][player->x] = EMPTY;
         		}
         		else{
@@ -395,6 +407,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       		case TROLL:
         		if(weapon == AXE){
           		printf("Good job !\nYou kill a Troll !\n");
+              player->kill++;
           		one_turn_plateau[player->y][player->x] = EMPTY;
         		}
         		else{
@@ -404,8 +417,9 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       		break;
 
       		case BASILISK:
-        		if(weapon == SHIELD){
+        		if(weapon == MIRROR){
           		printf("Good job !\nYou kill a Basilisk !\n");
+              player->kill++;
           		one_turn_plateau[player->y][player->x] = EMPTY;
         		}
         		else{
@@ -417,6 +431,7 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
       		case HARPY:
         		if(weapon == BOW){
           		printf("Good job !\nYou kill a Harpy !\n");
+              player->kill++;
           		one_turn_plateau[player->y][player->x] = EMPTY;
         		}
         		else{
@@ -468,8 +483,42 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
         		printf("Your y coordinate: \n");  
         		int temp_y;
         		scanf("%d", &temp_y );
-        		T_Element temp =  plateau[temp_y][temp_x];
-        		plateau[temp_y][temp_x] = plateau[player->y][player->x];
+            
+            switch(nb_ppl){
+  	           case 2:
+  		            while((temp_x == 3 && temp_y == 0) || (temp_x == 0 && temp_y == 1) || (temp_x<1 || temp_x>5) || (temp_y<1 || temp_y>5)){
+  			             printf("You aren't allowed to change this box or the coordonate are wrong ! \nPlease enter coordonate beetween 1 and 5. \n\n");
+  			             printf("Your new x coordinate: \n");
+        		         scanf("%d", &temp_x);
+        		         printf("Your new y coordinate: \n");
+        		         scanf("%d", &temp_y);
+        	         }
+  		            
+                 break;
+  	           case 3:
+  		            while((temp_x == 3 && temp_y == 0) || (temp_x == 0 && temp_y == 1) || (temp_x == 4 && temp_y == 3) || (temp_x<1 || temp_x>5) || (temp_y<1 || temp_y>5)){
+  			              printf("You aren't allowed to change this box or the coordonate are wrong ! \nPlease enter coordonate beetween 1 and 5. \n\n");
+  			              printf("Your new x coordinate: \n");
+        		          scanf("%d", &temp_x);
+        		          printf("Your new y coordinate: \n");
+        		          scanf("%d", &temp_y);
+        	        }
+  		            break;
+  	           case 4:
+  		            while((temp_x == 3 && temp_y == 0) || (temp_x == 0 && temp_y == 1) || (temp_x == 4 && temp_y == 3) || (temp_x == 1 && temp_y == 4) || (temp_x<1 || temp_x>5) || (temp_y<1 || temp_y>5)){
+  			              printf("You aren't allowed to change this box or the coordonate are wrong ! \nPlease enter coordonate beetween 1 and 5. \n\n");
+  			              printf("Your new x coordinate: \n");
+        		          scanf("%d", &temp_x);
+        		          printf("Your new y coordinate: \n");
+        		          scanf("%d", &temp_y);
+        	         }
+  		            break;
+  	           default:
+  		            break;
+  	               }
+            
+            T_Element temp =  plateau[temp_y -1][temp_x -1];
+            plateau[temp_y -1][temp_x -1] = plateau[player->y][player->x];
         		plateau[player->y][player->x] = temp;
         		print_Plateau(nb_ppl, plateau, name_elements);
         		//Attention, nous ne pouvons pas transposé un objet sur une case 
@@ -483,15 +532,49 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
         break;
 
       case TOTEM:
-        printf("You find the transmution totem, interesting\nChoose a hiden square:\n");
+        printf("You find the transmution totem, interesting, choose an hidden square to change your actual box with another one:\n");
         printf("Your x coordinate: \n");
         int temp_x;
         scanf("%d", &temp_x);
         printf("Your y coordinate: \n");  
         int temp_y;
         scanf("%d", &temp_y );
-        T_Element temp =  plateau[temp_y][temp_x];
-        plateau[temp_y][temp_x] = plateau[player->y][player->x];
+        
+            switch(nb_ppl){
+  	           case 2:
+  		            while((temp_x == 3 && temp_y == 0) || (temp_x == 0 && temp_y == 1) || (temp_x<1 || temp_x>5) || (temp_y<1 || temp_y>5)){
+  			             printf("You aren't allowed to change this box or the coordonate are wrong ! \nPlease enter coordonate beetween 1 and 5. \n\n");
+  			             printf("Your new x coordinate: \n");
+        		         scanf("%d", &temp_x);
+        		         printf("Your new y coordinate: \n");
+        		         scanf("%d", &temp_y);
+        	         }
+  		            
+                 break;
+  	           case 3:
+  		            while((temp_x == 3 && temp_y == 0) || (temp_x == 0 && temp_y == 1) || (temp_x == 4 && temp_y == 3) || (temp_x<1 || temp_x>5) || (temp_y<1 || temp_y>5)){
+  			              printf("You aren't allowed to change this box or the coordonate are wrong ! \nPlease enter coordonate beetween 1 and 5. \n\n");
+  			              printf("Your new x coordinate: \n");
+        		          scanf("%d", &temp_x);
+        		          printf("Your new y coordinate: \n");
+        		          scanf("%d", &temp_y);
+        	        }
+  		            break;
+  	           case 4:
+  		            while((temp_x == 3 && temp_y == 0) || (temp_x == 0 && temp_y == 1) || (temp_x == 4 && temp_y == 3) || (temp_x == 1 && temp_y == 4) || (temp_x<1 || temp_x>5) || (temp_y<1 || temp_y>5)){
+  			              printf("You aren't allowed to change this box or the coordonate are wrong ! \nPlease enter coordonate beetween 1 and 5. \n\n");
+  			              printf("Your new x coordinate: \n");
+        		          scanf("%d", &temp_x);
+        		          printf("Your new y coordinate: \n");
+        		          scanf("%d", &temp_y);
+        	         }
+  		            break;
+  	           default:
+  		            break;
+  	               }
+        
+        T_Element temp =  plateau[temp_y -1][temp_x -1];
+        plateau[temp_y -1][temp_x -1] = plateau[player->y][player->x];
         plateau[player->y][player->x] = temp;
         print_Plateau(nb_ppl, plateau, name_elements);
         //Attention, nous ne pouvons pas transposé un objet sur une case 
@@ -519,12 +602,17 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
 
     if(player->spe_obj == 1 && player->chest == 1){
       player_win = 1;
-      printf("\n %s win ! Congratulation ! \n", player->name);
+      ClearScreen();
+      printf("\n %s win ! Congratulation ! \n\n You have done %d kills and move on a box %d times !", player->name,player->kill,player->nb_cases);
+      printf("Here is the tray completely visible : \n\n");
+      print_Plateau(nb_ppl, plateau, name_elements);
+      return 1;
     }
     
     if (player->dead == 1){
     	player->spe_obj = 0;
     	player->chest = 0;
+      return 0;
     }
 
   } // fin do / while
@@ -532,92 +620,70 @@ void player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SI
 
 
 void game2(Player * playerA, Player * playerB, T_Element  plateau[SIZE_PLATEAU][SIZE_PLATEAU], int nb_player, T_Element tab_elements[], char name_elements[14][11], char name_role1[NB_ROLE][10]){
-  int player_not_win = 1;
-  while(player_not_win == 1){
+  int player_not_win = 0;
+  while(player_not_win != 1){
 
     printf("\n");
-    player_turn(nb_player, playerA, plateau, tab_elements, name_elements, name_role1);
-    if (playerA->chest == 1 && playerA->spe_obj == 1){
-      player_not_win = 0;
-    }
+    player_not_win = player_turn(nb_player, playerA, plateau, tab_elements, name_elements, name_role1);
+    
     
     printf("\n");
-    if(player_not_win == 1){
+    if(player_not_win != 1){
       ClearScreen();
-      player_turn(nb_player, playerB, plateau, tab_elements, name_elements, name_role1);
-      if (playerB->chest == 1 && playerB->spe_obj == 1){
-        player_not_win = 0;
-      }
+      player_not_win = player_turn(nb_player, playerB, plateau, tab_elements, name_elements, name_role1);
     }
   }
 }
-  
+
+
 void game3(Player * playerA, Player * playerB, Player * playerC, T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU], int nb_player, T_Element tab_elements[], char name_elements[14][11], char name_role2[NB_ROLE][10]){
-  int player_not_win = 1;
-  while(player_not_win){
+  int player_not_win = 0;
+  while(player_not_win != 1){
 
     printf("\n");
-    player_turn(nb_player, playerA, plateau, tab_elements, name_elements, name_role2);
-    if (playerA->chest == 1 && playerA->spe_obj == 1){
-      player_not_win = 0;
-    }
+    player_not_win = player_turn(nb_player, playerA, plateau, tab_elements, name_elements, name_role2);
     
     printf("\n");
-    if(player_not_win == 1){
+    if(player_not_win != 1){
       ClearScreen();
-      player_turn(nb_player, playerB, plateau, tab_elements, name_elements, name_role2);
-      if (playerB->chest == 1 && playerB->spe_obj == 1){
-        player_not_win = 0;
-      }
+      player_not_win = player_turn(nb_player, playerB, plateau, tab_elements, name_elements, name_role2);
     }
     
+    
     printf("\n");
-    if(player_not_win == 1){
+    if(player_not_win != 1){
       ClearScreen();
-      player_turn(nb_player, playerC, plateau, tab_elements, name_elements, name_role2);
-      if (playerC->chest == 1 && playerC->spe_obj == 1){
-        player_not_win = 0;
-      }
+      player_not_win = player_turn(nb_player, playerC, plateau, tab_elements, name_elements, name_role2);
     }
   }
 }
-  
+
+
 void game4(Player * playerA, Player * playerB, Player * playerC, Player * playerD, T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU], int nb_player, T_Element tab_elements[], char name_elements[14][11], char name_role3[NB_ROLE][10]){
-  int player_not_win = 1;
-  while(player_not_win){
+  int player_not_win = 0;
+  while(player_not_win != 1){
 
     printf("\n");
-    player_turn(nb_player, playerA, plateau, tab_elements, name_elements, name_role3);
-    if (playerA->chest == 1 && playerA->spe_obj == 1){
-      player_not_win = 0;
+    player_not_win = player_turn(nb_player, playerA, plateau, tab_elements, name_elements, name_role3);
+    
+    
+    printf("\n");
+    if(player_not_win != 1){
+      ClearScreen();
+      player_not_win = player_turn(nb_player, playerB, plateau, tab_elements, name_elements, name_role3);
+    }
+    
+    
+    printf("\n");
+    if(player_not_win != 1){
+      ClearScreen();
+      player_not_win = player_turn(nb_player, playerC, plateau, tab_elements, name_elements, name_role3);
     }
     
     printf("\n");
-    if(player_not_win == 1){
+    if(player_not_win != 1){
       ClearScreen();
-      player_turn(nb_player, playerB, plateau, tab_elements, name_elements, name_role3);
-      if (playerB->chest == 1 && playerB->spe_obj == 1){
-        player_not_win = 0;
-      }
+      player_not_win = player_turn(nb_player, playerD, plateau, tab_elements, name_elements, name_role3);
     }
-    
-    printf("\n");
-    if(player_not_win == 1){
-      ClearScreen();
-      player_turn(nb_player, playerC, plateau, tab_elements, name_elements, name_role3);
-      if (playerC->chest == 1 && playerC->spe_obj == 1){
-        player_not_win = 0;
-      }
-    }
-    
-    printf("\n");
-    if(player_not_win == 1){
-      ClearScreen();
-      player_turn(nb_player, playerD, plateau, tab_elements, name_elements, name_role3);
-      if (playerD->chest == 1 && playerD->spe_obj == 1){
-        player_not_win = 0;
-      }
-    }  
   }  
 }
-
