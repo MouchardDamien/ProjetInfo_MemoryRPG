@@ -3,13 +3,13 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <locale.h>
 
 #define NB_ROLE 5
 #define SIZE_PLATEAU 5
 #define ROLES 4
 #define NB_ELEMENTS (SIZE_PLATEAU*SIZE_PLATEAU)
 
-//#define U0001F7E9 PLAYER_ONE
 
 typedef enum { WARRIOR, RANGER, MAGE, THIEF, NOROLE } T_Role;
 
@@ -50,6 +50,10 @@ typedef struct {
 
 int welcome();
 
+int init_nb_ppl();
+
+int rules();
+
 T_Role init_role(T_Role used_roles[NB_ROLE]);
 
 void init_player(Player * create, int num_player, T_Role used_roles[NB_ROLE], int coord_x, int coord_y, char yes_roles[NB_ROLE][10]);
@@ -59,6 +63,14 @@ void create_plateau(T_Element tab_plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element
 void create_hiden_plateau(T_Element tab[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_Elements2[]);
 
 void print_Plateau(int nb_p, T_Element tab_plateau[SIZE_PLATEAU][SIZE_PLATEAU], char name_elements[14][11]);
+
+void name(Player * A);
+
+void names2(Player * A, Player * B);
+
+void names3(Player * A, Player * B,Player * C);
+
+void names4(Player * A, Player * B, Player * C, Player * D);
 
 void game(Player player, int nb_p);
 
