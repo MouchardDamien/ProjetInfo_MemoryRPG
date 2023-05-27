@@ -1,7 +1,8 @@
 #include "header.h"
 
 
-
+//Fonction init_nb_ppl
+//Permet de determiner combien de personnes vont jouer au jeu
 int init_nb_ppl(){
   int num_players, verif, choice;  
   
@@ -36,12 +37,15 @@ int init_nb_ppl(){
 }
 
 
-
+//Fonction player_name
+//Permet de demander les noms des joueurs
 void player_name(char name[30],int num_of_player){
   printf("What is the name of the player n°%d ? (30 letters max !)\n\n", num_of_player);
   scanf("%s",name);
 }
 
+//Fonction players_names2
+//Permet de demander le nom de 2 joueurs
 void players_names2(char p1[30], char p2[30]){
   player_name(p1,1);
   ClearScreen();
@@ -49,6 +53,8 @@ void players_names2(char p1[30], char p2[30]){
   
 }
 
+//Fonction players_names3
+//Permet de demander le nom de 3 joueurs
 void players_names3(char p1[30], char p2[30], char p3[30]){
   player_name(p1,1);
   ClearScreen();
@@ -57,6 +63,8 @@ void players_names3(char p1[30], char p2[30], char p3[30]){
   player_name(p3,3);
 }
 
+//Fonction players_names4
+//Permet de demander le nom de 4 joueurs
 void players_names4(char p1[30], char p2[30], char p3[30], char p4[30]){
   player_name(p1,1);
   ClearScreen();
@@ -68,6 +76,10 @@ void players_names4(char p1[30], char p2[30], char p3[30], char p4[30]){
 }
 
 
+
+//Fonction init_player
+//Permet d'initialiser toute la structure Player
+//Et de, selon le nombre de joueur, afficher quelle est la couleur et le role du joueur
 void init_player(Player * create, int num_player, T_Role used_roles[NB_ROLE], int coord_x,
                    int coord_y, char yes_roles[NB_ROLE][10], char p_name[30]) {
 
@@ -115,13 +127,12 @@ void init_player(Player * create, int num_player, T_Role used_roles[NB_ROLE], in
 }
 
 
-
+/* 
+  Fonction init_role
+  Indique un des 4 roles qui n'a pas ete utilse pour un joueur
+*/
 T_Role init_role(T_Role used_roles[NB_ROLE]) {
-  /* Fonction init_role
-   Indique un des 4 roles qui n'a pas ete utilse
-   Entrees : T_Role used_roles[4] : liste les roles deja utilises
-   Sortie  : T_Role pas encore utilise :
-  */
+  
   int role_found = 1;
   T_Role role;
   while (role_found) {
