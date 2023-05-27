@@ -37,12 +37,41 @@ int init_nb_ppl(){
 
 
 
+void player_name(char name[30],int num_of_player){
+  printf("What is the name of the player n°%d ? (30 letters max !)\n\n", num_of_player);
+  scanf("%s",name);
+}
+
+void players_names2(char p1[30], char p2[30]){
+  player_name(p1,1);
+  ClearScreen();
+  player_name(p2,2);
+  
+}
+
+void players_names3(char p1[30], char p2[30], char p3[30]){
+  player_name(p1,1);
+  ClearScreen();
+  player_name(p2,2);
+  ClearScreen();
+  player_name(p3,3);
+}
+
+void players_names4(char p1[30], char p2[30], char p3[30], char p4[30]){
+  player_name(p1,1);
+  ClearScreen();
+  player_name(p2,2);
+  ClearScreen();
+  player_name(p3,3);
+  ClearScreen();
+  player_name(p4,4);
+}
+
+
 void init_player(Player * create, int num_player, T_Role used_roles[NB_ROLE], int coord_x,
-                   int coord_y, char yes_roles[NB_ROLE][10]) {
-  printf("What is the name of the player n°%d ? \n\n", num_player);
-  fgets(create->name, sizeof(create->name), stdin);
-  create->name[strcspn(create->name, "\n")] = '\0';
-  printf("\n");
+                   int coord_y, char yes_roles[NB_ROLE][10], char p_name[30]) {
+
+  strcpy(create->name, p_name);
   create->num = num_player;
   create->role = init_role(used_roles);
   create->kill = 0;
