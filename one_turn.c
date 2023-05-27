@@ -1,7 +1,8 @@
-##include "header.h"
+#include "header.h"
 
 
-// Tour de joueur
+//Fonction player_turn
+//Permet de facon globale de faire le tour entier d'un joueur
 int player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU], T_Element tab_elements[], char name_elements[14][11], char name_roles[NB_ROLE][10]){
 
   T_Weapon weapon = -1;
@@ -17,9 +18,9 @@ int player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZ
   	}
   }
   
-  create_hiden_plateau(one_turn_plateau, tab_elements);
+  create_hiden_plateau(one_turn_plateau, tab_elements);//On cree le plateau avec toutes les cases masquees
 
-  printf("------------------------------------\n %s, the %s, it's your turn ! \n------------------------------------\n\n", player->name,name_roles[player->role]);
+  printf("---------------------------------------\n %s, the %s, it's your turn ! \n---------------------------------------\n\n", player->name,name_roles[player->role]);
 
    switch(player->num){
   	
@@ -46,16 +47,19 @@ int player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZ
   player->spe_obj = 0;
   player->chest = 0;
   player->dead = 0;
-  
-  // Boucle gagnant ou mort
+
+  // Boucle pour le tour du joueur
+  // Boucle qui continu tant qu'il n'y a pas de gagnant ou de mort
   while ((player_win != 1) && (player->dead != 1)) {
     
     // Afficher le plateau
     print_Plateau(nb_ppl, one_turn_plateau,name_elements);
     name(player);
 
+    //Choisi une arme
     weapon = choose_weapon(nb_ppl,player,one_turn_plateau, name_elements);
-    
+
+    //Choisi une direction
     direction = choose_direction(nb_ppl,player,one_turn_plateau,name_elements,used);
     
     one_turn_plateau[player->y][player->x] = plateau[player->y][player->x]; //On relie les 2 tableaux
@@ -70,7 +74,7 @@ int player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZ
     	interaction_box(nb_ppl, player,plateau,one_turn_plateau,name_elements,weapon,used);
     }
     
-    if(player->spe_obj == 1 && player->chest == 1){
+    if(player->spe_obj == 1 && player->chest == 1){ //On regarde s'il a gagne ou non
       player_win = 1;
       sleep(1);
       ClearScreen();
@@ -87,7 +91,7 @@ int player_turn(int nb_ppl, Player * player, T_Element plateau[SIZE_PLATEAU][SIZ
       return 0;
     }
 
-  } // fin do-while
+  } // fin do-while (de la boule du tour de joueur)
   printf("ERROR IN one_turn FUNCTION !!!");
   return -1;
 }
