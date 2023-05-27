@@ -97,11 +97,10 @@ int main() {
             unavailable_roles[i] = NOROLE;
           }
       
-          T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU];
+          	    T_Element plateau[SIZE_PLATEAU][SIZE_PLATEAU];
   		    T_Element display_plateau[SIZE_PLATEAU][SIZE_PLATEAU];
   	
   		    create_plateau(plateau, tab_Elements);
-  		    print_Plateau(num_ppl, plateau, name_Elements);
   
   		    chronometer = chrono();
   		    switch(num_ppl){
